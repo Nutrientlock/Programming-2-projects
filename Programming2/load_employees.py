@@ -6,7 +6,7 @@ def load_employees():
     data.employees = []
 
     try:
-        with open("employee.csv.txt") as file:
+        with open("employee.csv") as file:
             reader = csv.DictReader(file)
             for row in reader:
                 data.employees.append(row)
