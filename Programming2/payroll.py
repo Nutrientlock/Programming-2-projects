@@ -1,11 +1,12 @@
-import data
+import dataforp2
 
 def calculate_payroll():
-    if not data.employees:
+    print(dataforp2.employees)
+    if not dataforp2.employees:
         print("Load employees first!")
         return
 
-    for worker in data.employees:
+    for worker in dataforp2.employees:
 
         # Only process ACTIVE employees
         if worker["Status"] != "Active":
@@ -30,3 +31,4 @@ def calculate_payroll():
         print(f"NIS: {nis:.2f}")
         print(f"Education Tax: {edu_tax:.2f}")
         print(f"Net Pay: {net:.2f}")
+calculate_payroll()

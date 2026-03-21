@@ -1,17 +1,17 @@
 import csv
-import data
+import dataforp2
 
 
 def load_employees():
-    data.employees = []
+    dataforp2.employees = []
 
     try:
         with open("employee.csv") as file:
             reader = csv.DictReader(file)
             for row in reader:
-                data.employees.append(row)
+                dataforp2.employees.append(row)
 
-        print(f"{len(data.employees)} employees loaded.")
+        print(f"{len(dataforp2.employees)} employees loaded.")
 
     except FileNotFoundError:
         print("employee.csv not found!")

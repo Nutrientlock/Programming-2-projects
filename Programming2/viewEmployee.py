@@ -1,13 +1,13 @@
-import data
+import dataforp2
 
 def view_employees():
-    if not data.employees:
+    if not dataforp2.employees:
         print("Load employees first!")
         return
 
     status_filter = input("Filter (Active/On Leave/Terminated/All): ")
 
-    for worker in data.employees:
+    for worker in dataforp2.employees:
         # Skip if it doesn't match filter
         if status_filter.lower() != "all" and worker["Status"].lower() != status_filter.lower():
             continue
