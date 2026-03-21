@@ -1,7 +1,24 @@
 import dataforp2
+import csv
+from datetime import datetime
 
-def calculate_payroll():
-    print(dataforp2.employees)
+def save_payroll(emp_id, hours, rate, gross, nis, tax, net):
+
+    with open("payroll.csv", "a", newline="") as file:
+        writer = csv.writer(file)
+
+        writer.writerow([
+            datetime.now().date(),  # today's date
+            emp_id,
+            hours,
+            rate,
+            gross,
+            nis,
+            tax,
+            net
+        ])
+
+def calculate_payroll():   
     if not dataforp2.employees:
         print("Load employees first!")
         return
@@ -25,10 +42,13 @@ def calculate_payroll():
         edu_tax = (gross - nis) * 0.0225
         net = gross - nis - edu_tax
 
+        save_payroll(worker["EmployeeID"],hours,rate,gross,nis,edu_tax,net)
+
         print("\n--- Payroll Result ---")
         print(f"Name: {worker['FullName']}")
         print(f"Gross Pay: {gross:.2f}")
         print(f"NIS: {nis:.2f}")
         print(f"Education Tax: {edu_tax:.2f}")
         print(f"Net Pay: {net:.2f}")
-calculate_payroll()
+if __name__ == '__main__':
+    calculate_payroll()
