@@ -2,19 +2,19 @@ import dataforp2
 
 def view_employees():
     if not dataforp2.employees:
-        print("Load employees first!")
+        print("\t\t\t\t\t\tLoad employees first!")
         return
 
-    status_filter = input("Filter (Active/On Leave/Terminated/All): ")
+    status_filter = input("\t\t\t\t\t\tFilter (Active/On Leave/Terminated/All): ")
 
     for worker in dataforp2.employees:
         # Skip if it doesn't match filter
         if status_filter.lower() != "all" and worker["Status"].lower() != status_filter.lower():
             continue
-        print("\n------------------")
-        print(f"ID    : {worker['EmployeeID']}")
-        print(f"Name  : {worker['FullName']}")
-        print(f"Role  : {worker['Role']}")
-        print(f"Status: {worker['Status']}")
+        print("\n\t\t\t\t\t\t------------------")
+        print(f"\t\t\t\t\t\tID    : {worker['EmployeeID']}")
+        print(f"\t\t\t\t\t\tName  : {worker['FullName']}")
+        print(f"\t\t\t\t\t\tRole  : {worker['Role']}")
+        print(f"\t\t\t\t\t\tStatus: {worker['Status']}")
 if __name__ == '__main__':
     view_employees()

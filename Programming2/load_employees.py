@@ -11,9 +11,9 @@ def load_employees():
             for row in reader:
                 dataforp2.employees.append(row)
 
-        print(f"{len(dataforp2.employees)} employees loaded.")
+        print(f"\t\t\t\t\t\t{len(dataforp2.employees)} employees loaded.")
 
     except FileNotFoundError:
-        print("employee.csv not found!")
+        print("\t\t\t\t\t\temployee.csv not found!")
 if __name__ == '__main__':
     load_employees()
