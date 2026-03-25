@@ -4,7 +4,7 @@ import payroll
 
 def menu():
     while True:
-            print("\t\t\t\t\t\t========= Payroll System =========")
+            print("\n\t\t\t\t\t\t========= Payroll System =========")
             print("\t\t\t\t\t\t= 1. Load Employees              =")
             print("\t\t\t\t\t\t= 2. View Employee List          =")
             print("\t\t\t\t\t\t= 3. Calculate Payroll           =")
