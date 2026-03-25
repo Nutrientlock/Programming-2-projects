@@ -24,7 +24,8 @@ def menu():
                 viewEmployee.view_employees()
             elif choice == "3":
                 print("\t\t\t\t\t\tCalculate Payroll selected\n")
-                
+                payroll.calculate_payroll()
+               
             elif choice == "4":
                 print("\t\t\t\t\t\tView Payroll Summary Report selected\n")
               
