@@ -22,11 +22,11 @@ def calculate_payroll():
     if not dataforp2.employees:
         print("\t\t\t\t\t\tLoad employees first!")
         return
-
+   
     for worker in dataforp2.employees:
 
         # Only process ACTIVE employees
-        if worker["Status"] != "Active":
+        if worker["Status"].upper() != "ACTIVE":
             continue
 
         try:
