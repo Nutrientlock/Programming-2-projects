@@ -7,86 +7,72 @@
 #include <string.h>
 #include <ctype.h>
 
+#define CSV_file "C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv"
+
 // struct to receive Employee data
-typedef struct{
+struct employee {
     char Employee_ID [10];
-    char First_name [40];
-    char Last_name [40];
-    char Role [40];
-    char Status [40];
-} employee;
+    char First_name  [40];
+    char Last_name   [40];
+    char Role        [40];
+    char Status      [40];
+    int  Hourly_rate;
+};
+struct employee emp;
 
-// Open File 
+// Forward declarations
 FILE *open_file();
-
-// Close File
-void close_file(FILE *file);
-
-// function to appeand of create a new file
-void Clean_file(employee *emp);
-
-// Function to add Employee
-void Add_Employee(employee *emp);
-
-// Validate the uniqueness of ID number
-int valid_id(char *idPtr);
-
-// validate employee status
-int Valid_status(char *status); 
-
-// validate employee role
-int Valid_role(char *role);
-
-// list Employees
-void list_emplyees(employee *emp);
-
-// Find Employee
-void find_employee(employee *emp);
-
-// Update Employee
-void update_employee(employee *emp);
+void  close_file(FILE *file);
+void  Clean_file(struct employee *emp);
+void  Add_Employee(struct employee *emp);
+int   valid_id(char *idPtr);
+int   Valid_status(char *status);
+int   Valid_role(char *role);
+void  list_emplyees(struct employee *emp);
+void  find_employee(struct employee *emp);
+void  Update_Record(struct employee *emp);
 
 
 int main(){
-    employee emp;
-    employee *empPtr = &emp;
+    struct employee *empPtr = &emp;
 
-    FILE *file = open_file(empPtr);
+    FILE *file = open_file();
     if (file == NULL) return 1;
+
     list_emplyees(empPtr);
     close_file(file);
     find_employee(empPtr);
-    update_employee(empPtr);
+    Update_Record(empPtr);
 
     return 0;
 }
 
+
 FILE *open_file(){
-    FILE *file;
-    file = fopen("C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv", "a");
+    FILE *file = fopen(CSV_file, "a");
     if (file == NULL){
-        printf("File failed to open");
+        printf("File failed to open\n");
         return NULL;
     }
-    else {
-        printf("file open successful\n");
-        return file;
-    }
+    printf("File open successful\n");
+    Clean_file(&emp);
+    return file;
 }
 
-void close_file(FILE* file){
+
+void close_file(FILE *file){
     fclose(file);
 }
 
-// function to appeand of create a new file
-void Clean_file(employee *emp){
+
+void Clean_file(struct employee *emp){
     int clean_file;
 
-    printf("Do you want a clean Document 1 for no and 0 for yes: ");
+    printf("Do you want a clean Document? 1 for no, 0 for yes: ");
     scanf("%d", &clean_file);
 
     if (clean_file == 0){
-        FILE *file = fopen("C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv", "w"); 
+        FILE *file = fopen(CSV_file, "w");
         fclose(file);
         Add_Employee(emp);
     }
@@ -94,25 +80,24 @@ void Clean_file(employee *emp){
         Add_Employee(emp);
     }
     else {
-        printf("Invalid Input");
+        printf("Invalid Input\n");
     }
 }
 
-// Validate the uniqueness of ID number
-int valid_id(char *idPtr) {
-    char line[200];
+
+int valid_id(char *idPtr){
     char existingID[10];
+    char line[200];
 
-    FILE *file = fopen("C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv", "r");
-    if (file == NULL) {
-        return 0; 
-    }
+    // FIX 1: was hardcoded string, now uses CSV_file macro
+    FILE *file = fopen(CSV_file, "r");
+    if (file == NULL) return 0;
 
-    while (fgets(line, sizeof(line), file) != NULL) {
-        sscanf(line, "%[^,]", existingID); 
-        if (strcmp(existingID, idPtr) == 0) {
+    while (fgets(line, sizeof(line), file) != NULL){
+        sscanf(line, "%[^,]", existingID);
+        if (strcmp(existingID, idPtr) == 0){
             fclose(file);
-            return 1; 
+            return 1;
         }
     }
 
@@ -120,26 +105,29 @@ int valid_id(char *idPtr) {
     return 0;
 }
 
-// validate employee status
+
 int Valid_status(char *Status){
     int i = 0;
     while (Status[i] != '\0'){
         Status[i] = toupper(Status[i]);
-        i += 1;
+        i++;
     }
-    if (strcmp(Status, "ACTIVE") == 0)     return 1;
-    if (strcmp(Status, "LEAVE") == 0)      return 1;
+    if (strcmp(Status, "ACTIVE")     == 0) return 1;
+    if (strcmp(Status, "LEAVE")      == 0) return 1;
     if (strcmp(Status, "TERMINATED") == 0) return 1;
 
-    printf("Invalid Input");
+    printf("Invalid Status\n");
     return 0;
 }
 
-// validate employee role
+
 int Valid_role(char *role){
-    int i = 0;
+    // FIX 2: old code read uninitialized temp[] until '\n' — crash waiting to happen
+    // correct approach: copy role into temp safely, then uppercase it
     char temp[40];
-    strncpy(temp, role, sizeof(temp));
+    int i = 0;
+
+    strncpy(temp, role, sizeof(temp) - 1);
     temp[sizeof(temp) - 1] = '\0';
 
     while (temp[i] != '\0'){
@@ -147,37 +135,36 @@ int Valid_role(char *role){
         i++;
     }
 
-    if (strcmp(temp, "MANAGER") == 0)    return 1;
-    if (strcmp(temp, "DEVELOPER") == 0)  return 1;
-    if (strcmp(temp, "ANALYST") == 0)    return 1;
-    if (strcmp(temp, "HR") == 0)         return 1;
-    if (strcmp(temp, "ADMIN") == 0)      return 1;
-    if (strcmp(temp, "ENGINEER") == 0)   return 1;
-    if (strcmp(temp, "INTERN") == 0)     return 1;
+    if (strcmp(temp, "MANAGER")   == 0) return 1;
+    if (strcmp(temp, "DEVELOPER") == 0) return 1;
+    if (strcmp(temp, "ANALYST")   == 0) return 1;
+    if (strcmp(temp, "HR")        == 0) return 1;
+    if (strcmp(temp, "ADMIN")     == 0) return 1;
+    if (strcmp(temp, "ENGINEER")  == 0) return 1;
+    if (strcmp(temp, "INTERN")    == 0) return 1;
 
-    printf("Invalid Role");
+    printf("Invalid Role\n");
     return 0;
 }
 
-// Function to add Employee
-void Add_Employee(employee *emp) {
+
+void Add_Employee(struct employee *emp){
     int starter = 0;
 
     do {
-        printf("Press 1 Add Employee or -999 to stop: ");
+        printf("Press 1 to Add Employee or -999 to stop: ");
         scanf("%d", &starter);
-        if (starter > 1 || starter <= 0){
-            break;
-        }
 
-        printf("Enter Employee ID,\nmust be 10 characters: ");
+        if (starter > 1 || starter <= 0) break;
+
+        printf("Enter Employee ID (max 9 characters): ");
         scanf("%s", emp->Employee_ID);
 
         if (strlen(emp->Employee_ID) <= 10){
 
-            if (valid_id(emp->Employee_ID) == 1) { 
+            if (valid_id(emp->Employee_ID) == 1){
                 printf("Error: ID already exists. Try a different ID.\n");
-                continue; 
+                continue;
             }
 
             printf("Enter Employee First name: ");
@@ -186,88 +173,99 @@ void Add_Employee(employee *emp) {
             printf("Enter Employee Last name: ");
             scanf("%s", emp->Last_name);
 
+            // FIX 3: was "while(Valid_role != 1)" — missing () and argument
+            // Valid_role is a function, you must call it: Valid_role(emp->Role)
             do {
-                printf("Enter Employee Role (Manager, Developer, Analyst, HR, Admin, Engineer, Intern): ");
+                printf("Enter Role (Manager, Developer, Analyst, HR, Admin, Engineer, Intern): ");
                 scanf("%s", emp->Role);
-                if (Valid_role(emp->Role) == 0){
-                    printf("\nError: Invalid Role.\n");
-                }
-            }
-            while(Valid_role(emp->Role) == 0);
+                if (Valid_role(emp->Role) == 0)
+                    printf("Error: Invalid Role.\n");
+            } while (Valid_role(emp->Role) == 0);
 
             do {
-                printf("Enter Employee Status (Active, Leave, Terminated): ");
+                printf("Enter Status (Active, Leave, Terminated): ");
                 scanf("%s", emp->Status);
-                if (Valid_status(emp->Status) == 0){
-                    printf("\nError: Invalid Status. Must be Active, On Leave, or Terminated: \n");
-                }
-            }
-            while(Valid_status(emp->Status) == 0);
+                if (Valid_status(emp->Status) == 0)
+                    printf("Error: Invalid Status.\n");
+            } while (Valid_status(emp->Status) == 0);
 
-            FILE *file = fopen("C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv", "a"); 
-            if (file == NULL) {
-                printf("File Failed to open\n");
-                return; 
+            printf("Enter employee Hourly rate: ");
+            // FIX 4: was scanf("%d", emp->Hourly_rate) — missing & for address
+            scanf("%d", &emp->Hourly_rate);
+
+            // FIX 5: was fopen("CSV_file", "a") — CSV_file in quotes is a literal
+            // string "CSV_file", not the macro. Remove the quotes to use the macro.
+            FILE *file = fopen(CSV_file, "a");
+            if (file == NULL){
+                printf("File failed to open\n");
+                return;
             }
 
-            fprintf(file, "%s,%s,%s,%s,%s\n",  
+            // FIX 6: Hourly_rate is an int so format specifier must be %d not %s
+            fprintf(file, "%s,%s,%s,%s,%s,%d\n",
                 emp->Employee_ID,
                 emp->First_name,
                 emp->Last_name,
                 emp->Role,
-                emp->Status
-            );
+                emp->Status,
+                emp->Hourly_rate);
 
             fclose(file);
             printf("Employee added successfully.\n");
 
+        } else {
+            printf("ID is too long.\n");
         }
-        else {
-            printf("ID Number is Invalid");
-        }
-    } while(starter != -999 || starter < 2);
+
+    } while (starter != -999);
 }
 
 
-void list_emplyees(employee *emp){
-    FILE *file = fopen("C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv", "r");
+void list_emplyees(struct employee *emp){
     char line[200];
+    char Full_name[80];
 
-    if (file == NULL) {
+    // FIX 7: was fopen("CSV_file") — macro must be used without quotes
+    FILE *file = fopen(CSV_file, "r");
+    if (file == NULL){
         printf("Error: Employee file not found.\n");
         return;
     }
 
     fseek(file, 0, SEEK_END);
     long int size = ftell(file);
-
-    if (size == 0) {
+    if (size == 0){
         printf("No employees found. File is empty.\n");
         fclose(file);
         return;
     }
-
     rewind(file);
 
-    printf("\n%-10s %-20s %-20s %-15s\n", "ID", "Full Name", "Role", "Status");
+    printf("\n%-10s %-20s %-20s %-15s %-15s\n",
+        "ID", "Full Name", "Role", "Status", "Hourly Rate");
     printf("--------------------------------------------------------------\n");
 
-    while (fgets(line, sizeof(line), file) != NULL) {
-        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^\n]",
+    while (fgets(line, sizeof(line), file) != NULL){
+        // FIX 8: Hourly_rate is int — must use %d not %[^\n]
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%d",
             emp->Employee_ID,
             emp->First_name,
             emp->Last_name,
             emp->Role,
-            emp->Status);
+            emp->Status,
+            &emp->Hourly_rate);
 
-        char Full_name[80];
+        // FIX 9: was using local First_name/Last_name which were never filled
+        // must use emp->First_name and emp->Last_name
         snprintf(Full_name, sizeof(Full_name), "%s %s", emp->First_name, emp->Last_name);
 
-        printf("%-10s %-20s %-20s %-15s\n",
+        // FIX 10: Hourly_rate is int — printf format must be %d not %s
+        printf("%-10s %-20s %-20s %-15s %-15d\n",
             emp->Employee_ID,
             Full_name,
             emp->Role,
-            emp->Status);
+            emp->Status,
+            emp->Hourly_rate);
     }
 
     printf("--------------------------------------------------------------\n");
@@ -275,56 +273,61 @@ void list_emplyees(employee *emp){
 }
 
 
-// find_employee
-void find_employee(employee *emp){
+void find_employee(struct employee *emp){
     char line[200];
     char ID_search[10];
+    char Full_name[80];
     int found = 0;
 
     printf("Enter the ID number of the person you wish to find: ");
     scanf("%s", ID_search);
 
-    FILE *file = fopen("C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv", "r");
+    // FIX 11: was fopen("CSV_file") — macro must be used without quotes
+    FILE *file = fopen(CSV_file, "r");
     if (file == NULL){
         printf("Error: Employee file not found.\n");
         return;
     }
 
     while (fgets(line, sizeof(line), file) != NULL){
-        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^\n]",
+        // FIX 12: Hourly_rate needs %d
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%d",
             emp->Employee_ID,
             emp->First_name,
             emp->Last_name,
             emp->Role,
-            emp->Status);
+            emp->Status,
+            &emp->Hourly_rate);
 
         if (strcmp(emp->Employee_ID, ID_search) == 0){
             found = 1;
 
-            printf("\n%-10s %-20s %-20s %-15s\n", "ID", "Full Name", "Role", "Status");
+            printf("\n%-10s %-20s %-20s %-15s %-15s\n",
+                "ID", "Full Name", "Role", "Status", "Hourly Rate");
             printf("--------------------------------------------------------------\n");
 
-            char Full_name[80];
             snprintf(Full_name, sizeof(Full_name), "%s %s", emp->First_name, emp->Last_name);
 
-            printf("%-10s %-20s %-20s %-15s\n",
-                emp->Employee_ID, Full_name, emp->Role, emp->Status);
+            // FIX 13: Hourly_rate printf format must be %d not %s
+            printf("%-10s %-20s %-20s %-15s %-15d\n",
+                emp->Employee_ID,
+                Full_name,
+                emp->Role,
+                emp->Status,
+                emp->Hourly_rate);
 
             printf("--------------------------------------------------------------\n");
             break;
         }
     }
 
-    if (found == 0){
-        printf("Employee not found.\n");
-    }
+    if (found == 0) printf("Employee not found.\n");
 
     fclose(file);
 }
 
 
-// update_employee
-void update_employee(employee *emp){
+void Update_Record(struct employee *emp){
     char line[200];
     char ID_search[10];
     int found = 0;
@@ -333,7 +336,8 @@ void update_employee(employee *emp){
     printf("Enter the ID of the employee to update: ");
     scanf("%s", ID_search);
 
-    FILE *file = fopen("C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv", "r");
+    // FIX 14: was fopen("CSV_file") — macro must be used without quotes
+    FILE *file = fopen(CSV_file, "r");
     if (file == NULL){
         printf("Error: Employee file not found.\n");
         return;
@@ -347,20 +351,22 @@ void update_employee(employee *emp){
     }
 
     while (fgets(line, sizeof(line), file) != NULL){
-        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^\n]",
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%d",
             emp->Employee_ID,
             emp->First_name,
             emp->Last_name,
             emp->Role,
-            emp->Status);
+            emp->Status,
+            &emp->Hourly_rate);
 
         if (strcmp(emp->Employee_ID, ID_search) == 0){
             found = 1;
 
-            printf("Employee found: %s %s | Role: %s | Status: %s\n",
-                emp->First_name, emp->Last_name, emp->Role, emp->Status);
-            printf("What would you like to update?\n");
-            printf("1. Role\n2. Status\n3. Both\n");
+            printf("Found: %s %s | Role: %s | Status: %s | Rate: %d\n",
+                emp->First_name, emp->Last_name,
+                emp->Role, emp->Status, emp->Hourly_rate);
+
+            printf("1. Update Role\n2. Update Status\n3. Update Both\n");
             printf("Enter choice: ");
             scanf("%d", &choice);
 
@@ -368,9 +374,8 @@ void update_employee(employee *emp){
                 do {
                     printf("Enter new Role (Manager, Developer, Analyst, HR, Admin, Engineer, Intern): ");
                     scanf("%s", emp->Role);
-                    if (Valid_role(emp->Role) == 0){
-                        printf("\nError: Invalid Role. Try again.\n");
-                    }
+                    if (Valid_role(emp->Role) == 0)
+                        printf("Error: Invalid Role. Try again.\n");
                 } while (Valid_role(emp->Role) == 0);
             }
 
@@ -378,19 +383,19 @@ void update_employee(employee *emp){
                 do {
                     printf("Enter new Status (Active, Leave, Terminated): ");
                     scanf("%s", emp->Status);
-                    if (Valid_status(emp->Status) == 0){
-                        printf("\nError: Invalid Status. Try again.\n");
-                    }
+                    if (Valid_status(emp->Status) == 0)
+                        printf("Error: Invalid Status. Try again.\n");
                 } while (Valid_status(emp->Status) == 0);
             }
         }
 
-        fprintf(temp, "%s,%s,%s,%s,%s\n",
+        fprintf(temp, "%s,%s,%s,%s,%s,%d\n",
             emp->Employee_ID,
             emp->First_name,
             emp->Last_name,
             emp->Role,
-            emp->Status);
+            emp->Status,
+            emp->Hourly_rate);
     }
 
     fclose(file);
@@ -402,9 +407,7 @@ void update_employee(employee *emp){
         return;
     }
 
-    remove("C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv");
-    rename("C:\\Users\\ajayc\\Desktop\\P2\\temp.csv",
-           "C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv");
-
+    remove(CSV_file);
+    rename("C:\\Users\\ajayc\\Desktop\\P2\\temp.csv", CSV_file);
     printf("Employee updated successfully.\n");
 }
