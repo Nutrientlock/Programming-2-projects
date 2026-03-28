@@ -7,39 +7,8 @@
 #include <string.h>
 #include <ctype.h>
 
-
-// Open File 
-FILE *open_file();
-
-// Close File
-void close_file(FILE *file);
-
-// function to appeand of create a new file
-void Clean_file (struct employee *emp);
-
-// Function to add Employee
-void Add_Employee(struct employee *emp);
-
-// Validate the uniqueness of ID number
-int valid_id (char * idPtr);
-
-// validate employee status
-int Valid_status(char *status); 
-
-// validate employee role
-int Valid_role(char *role);
-
-// list Employees
-void list_emplyees(struct employee *emp);
-
-// Find Employee
-void find_employee(struct employee *emp);
-
-//Update Record
-void Update_Record(struct employee *emp);
-
-
 #define CSV_file "C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv"
+#define TEMP_file "C:\\Users\\ajayc\\Desktop\\P2\\temp.csv"
 
 // struct to receive Employee data
 struct employee{
@@ -48,22 +17,46 @@ struct employee{
     char Last_name [40];
     char Role [40];
     char Status [40];
-    int Hourly_rate;
+    float Hourly_rate;
 };
 struct employee emp;
+
+// Open File 
+FILE *open_file();
+// Close File
+void close_file(FILE *file);
+// function to appeand of create a new file
+void Clean_file (struct employee *emp);
+// Function to add Employee
+void Add_Employee(struct employee *emp);
+// Validate the uniqueness of ID number
+int valid_id (char * idPtr);
+// validate employee status
+int Valid_status(char *status); 
+// validate employee role
+int Valid_role(char *role);
+// list Employees
+void list_emplyees(struct employee *emp);
+// Find Employee
+void find_employee(struct employee *emp);
+//Update Record
+void Update_Record(struct employee *emp);
+// Delete Record
+void Delete_Record(struct employee *emp);
 
 
 int main(){
     struct employee *empPtr = &emp;
 
+    
     FILE *file = open_file();
     if (file == NULL) return 1;
-
 
     list_emplyees(empPtr);
     close_file(file);
     find_employee(empPtr);
-
+    Update_Record(empPtr);
+    Delete_Record(empPtr);
     return 0;
 }
 
@@ -80,6 +73,7 @@ FILE *open_file(){
         Clean_file(&emp);
         return file;
     }
+    close_file(file);
 }
 
 void close_file(FILE* file){
@@ -149,36 +143,31 @@ int Valid_status(char *Status){
 // Validate employee role
 int Valid_role(char *role){
     int i =0;
-    char temp[40] = {0};
+    char temp[40];
 
-    while (temp [i] != '\n'){ 
-    temp [i] = role [i];
-    i ++;
-    }
+    strncpy(temp, role, sizeof(temp) - 1);
+    temp[sizeof(temp) - 1] = '\0';
 
-    while (temp[i] !='\0' ){
+    while (temp[i] !='\n' ){
         temp[i] = toupper(temp[i]);
         i++;
     }
     if (strcmp(temp, "MANAGER") == 0)    return 1;
-    if (strcmp(temp, "DEVELOPER") == 0)  return 1;
-    if (strcmp(temp, "ANALYST") == 0)    return 1;
-    if (strcmp(temp, "HR") == 0)         return 1;
+    if (strcmp(temp, "SERVER") == 0)  return 1;
+    if (strcmp(temp, "COOK") == 0)    return 1;
+    if (strcmp(temp, "CASHIER") == 0)         return 1;
+    if (strcmp(temp, "HUMAN RESOURCES") == 0)  return 1;
     if (strcmp(temp, "ADMIN") == 0)      return 1;
     if (strcmp(temp, "ENGINEER") == 0)   return 1;
     if (strcmp(temp, "INTERN") == 0)     return 1;
 
-    printf("Invalid Role");
     return 0;
 }
 
 // Function to add Employee
 void Add_Employee(struct employee *emp){
-
-    struct employee local_emp;
     int starter = 0;
-    char *idPtr = NULL;
-    int validate ;
+
 
     do {
         printf("Press 1 Add Employee or -999 to stop: ");
@@ -188,81 +177,74 @@ void Add_Employee(struct employee *emp){
             break;
         }
 
-
         printf("Enter Employee ID,\nmust be 10 characters: ");
         scanf("%s", emp->Employee_ID);
 
-        idPtr= emp->Employee_ID; 
-
         if (strlen(emp->Employee_ID) <= 10){
+            printf("ID Number is Valid\n");
+            continue;;
+        }
 
-            if (valid_id(emp->Employee_ID) == 1) { 
-                printf("Error: ID already exists. Try a different ID.\n");
-                continue; 
-            }
+        if (valid_id(emp->Employee_ID) == 1) { 
+            printf("Error: ID already exists. Try a different ID.\n");
+            continue; 
+        }
 
-            printf("Enter Employee First name: ");
-            scanf("%s", emp->First_name);
+        printf("Enter Employee First name: ");
+        scanf("%s", emp->First_name);
 
-            printf("Enter Employee Last name: ");
-            scanf("%s", emp->Last_name);
+        printf("Enter Employee Last name: ");
+        scanf("%s", emp->Last_name);
 
-            do{
-            printf("Enter Employee Role (Manager, Developer, Analyst, HR, Admin, Engineer, Intern): ");
-            scanf("%s", emp->Role);
-            } while(Valid_role (emp->Role) == 0);
+        do{
+        printf("Enter Employee Role (MANAGER, SERVER, COOK, CASHIER, HUMAN RESOURCES, ADMIN, ENGINEER, INTERN):");
+        scanf("%s", emp->Role);
+        if (Valid_role(emp->Role) == 0){
+            printf("Invalid Role. Please try again.\n");
+        }
+        } while(Valid_role (emp->Role) == 0);
 
-            do {
+        do {
             printf("Enter Employee, Status Active, on leave, or terminated: ");
             scanf("%s", emp->Status);
-            
-                if (Valid_status(emp->Status) == 0){
-                    printf("\nError: Invalid Status. Must be Active, On Leave, or Terminated: \n");
-                
-                }
+            if (Valid_status(emp->Status) == 0){
+            printf("\nError: Invalid Status. Must be Active, On Leave, or Terminated: \n");
             }
-            while(Valid_status(emp->Status) == 0);
+        }while(Valid_status(emp->Status) == 0);
 
-            printf("Enter employee Hourly rate");
-            scanf("%d",&emp->Hourly_rate);
-
-            FILE *file = fopen(CSV_file, "a"); 
-
-            if (file == NULL) {
-                printf("File Failed to open\n");
-                return; 
+        do{
+            printf("Enter Employee Hourly Rate: ");
+            scanf("%f", &emp->Hourly_rate);
+            if (emp->Hourly_rate < 0 || emp->Hourly_rate > 80){
+                printf("Invalid Hourly Rate. Must be a positive integer between 0 and 80.\n");
             }
+        } while (emp->Hourly_rate < 0 || emp->Hourly_rate > 80);
 
-            fprintf(file, "%s,%s,%s,%s,%s,%d\n",  
-                emp->Employee_ID,
-                emp->First_name,
-                emp->Last_name,
-                emp->Role,
-                emp->Status,
-                emp->Hourly_rate
-            );
 
-            fclose(file);
-            printf("Employee added successfully.\n");
+        FILE *file = fopen(CSV_file, "a"); 
 
-        }
-        else {
-            printf("ID Number is Invalid");
+        if (file == NULL) {
+            printf("File Failed to open\n");
+            return; 
         }
 
-}   while(starter != -999);
-}
+        fprintf(file, "%s,%s,%s,%s,%s,%.2f\n",  
+            emp->Employee_ID,
+            emp->First_name,
+            emp->Last_name,
+            emp->Role,
+            emp->Status,
+            emp->Hourly_rate
+        );
+
+        fclose(file);
+        printf("Employee added successfully.\n");
+        }while(starter != -999);
+    } 
 
 // list Employees
 void list_emplyees(struct employee *emp){
-
-    char Employee_ID[10];
-    char First_name[40];
-    char Last_name[40];
-    char Role[40];
-    char Status[40];
     char line[200];
-    int hourly_rate;
     char Full_name[80];
 
     FILE *file = fopen(CSV_file, "r");
@@ -284,12 +266,12 @@ void list_emplyees(struct employee *emp){
     rewind(file);
 
     // print table header
-    printf("\n%-10s %-20s %-20s %-15s %-15d\n",
-        "ID", "Full Name", "Role", "Status", "hourly rate");
-    printf("--------------------------------------------------------------\n");
+    printf("\n%-10s %-20s %-20s %-15s %-15s\n",
+        "ID", "Full Name", "Role", "Status", "Hourly Rate");
+    printf("--------------------------------------------------------------------------------\n");
 
     while (fgets(line, sizeof(line), file) != NULL) {
-        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]",
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%f",
             emp->Employee_ID,
             emp->First_name,
             emp->Last_name,
@@ -298,10 +280,9 @@ void list_emplyees(struct employee *emp){
             &emp->Hourly_rate);
 
         // combine first and last name
-       
         snprintf(Full_name, sizeof(Full_name), "%s %s", emp->First_name, emp->Last_name);
 
-        printf("%-10s %-20s %-20s %-15s %-15d\n",
+        printf("%-10s %-20s %-20s %-15s %-15.2f\n",
             emp->Employee_ID,
             Full_name,
             emp->Role,
@@ -309,44 +290,48 @@ void list_emplyees(struct employee *emp){
             emp->Hourly_rate);
     }
 
-    printf("--------------------------------------------------------------\n");
+    printf("--------------------------------------------------------------------------------\n");
     close_file(file);
 }
 
 
 // find_employee
 void find_employee(struct employee *emp){
-
     char line [200];
     char ID_search [10];
     char ID_in_system[10];
     char Full_name[80];
+    int found = 0;
    
-    
-
     printf("Enter the ID number of the person you wish to find: ");
     scanf("%s",ID_search);
 
     FILE *file = fopen(CSV_file, "r");
-    
+    if (file == NULL) {                          // FIX 2a
+        printf("Error: Employee file not found.\n");
+        return;
+    }
+
     while (fgets(line, sizeof(line), file) != NULL){
         sscanf(line, "%[^,]", ID_in_system); 
-        if (strcmp(ID_in_system, ID_search) == 0 ){
 
-            printf("\n%-10s %-20s %-20s %-15s %-15d\n", "ID", "Full Name", "Role", "Status", "Hourly Rate");
-            printf("--------------------------------------------------------------\n");
-                sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%[^\n]",
+        if (strcmp(ID_in_system, ID_search) == 0 ){
+            found = 1;
+
+                sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%f",
                     emp->Employee_ID,
                     emp->First_name,
                     emp->Last_name,
                     emp->Role,
                     emp->Status,
-                    emp->Hourly_rate);
+                    &emp->Hourly_rate);
 
                 // combine first and last name
                 snprintf(Full_name, sizeof(Full_name), "%s %s", emp->First_name, emp->Last_name);
-
-                printf("%-10s %-20s %-20s %-15s %-15d\n",
+               
+                printf("\n%-10s %-20s %-20s %-15s %-15s\n", "ID", "Full Name", "Role", "Status", "Hourly Rate");
+                printf("--------------------------------------------------------------\n");
+                printf("%-10s %-20s %-20s %-15s %-15.2f\n",
                     emp->Employee_ID,
                     Full_name,
                     emp->Role,
@@ -354,28 +339,176 @@ void find_employee(struct employee *emp){
                     emp->Hourly_rate);
             
             printf("--------------------------------------------------------------\n");
-            close_file(file);
-
-
+            break;
         }
     }
+
+    if (found == 0)
+        printf("Employee with ID '%s' not found.\n", ID_search);
+
+    fclose(file);
 }
+
 // Update Record
 void Update_Record(struct employee *emp){
     char line [200];
     char ID_search [10];
-    char ID_in_system[10];
+    int found = 0;
+    int choice;
     
     printf("Enter the ID number of the record you wish to update: ");
     scanf("%s",ID_search);
 
-    FILE *file = fopen("CSV_file", "r");
-    
-    while (fgets(line, sizeof(line), file) != NULL){
-        sscanf(line, "%[^,]", ID_in_system); 
-        if (strcmp(ID_in_system, ID_search) == 0 ){
-            
-        }
+    FILE *file = fopen(CSV_file, "r");
+    if (file == NULL) {
+        printf("Error: Employee file not found.\n");
+        return;
     }
 
+     FILE *temp = fopen(TEMP_file, "w");
+    if (temp == NULL) {
+        printf("Error: Could not create temp file.\n");
+        fclose(file);
+        return;
+    }
+
+    while (fgets(line, sizeof(line), file) != NULL) {
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%f",
+            emp->Employee_ID,
+            emp->First_name,
+            emp->Last_name,
+            emp->Role,
+            emp->Status,
+            &emp->Hourly_rate);
+
+        if (strcmp(emp->Employee_ID, ID_search) == 0) {
+            found = 1;
+
+            printf("Found: %s %s %s, Role: %s, Status: %s, Hourly Rate: %.2f\n",
+                emp->Employee_ID,
+                emp->First_name,
+                emp->Last_name,
+                emp->Role,
+                emp->Status,
+                emp->Hourly_rate);
+
+            do {
+                printf("What would you like to update?\n");
+                printf("1. First Name\n2. Last Name\n3. Role\n4. Status\n5. Hourly Rate\n6. Stop updating\n");
+                printf("Enter your choice: ");
+                scanf("%d", &choice);
+
+                switch(choice){
+                    case 1:
+                        printf("Enter new First Name: ");
+                        scanf("%s", emp->First_name);
+                        continue;
+                    case 2:
+                        printf("Enter new Last Name: ");
+                        scanf("%s", emp->Last_name);
+                        continue;
+                    case 3:
+                        do { 
+                            printf("Enter new Role (MANAGER, SERVER, COOK, CASHIER, HUMAN RESOURCES, ADMIN, ENGINEER, INTERN): ");
+                            scanf("%s", emp->Role);
+                            if (Valid_role(emp->Role) == 0){
+                                printf("Invalid Role. Please try again.\n");
+                            }
+                        } while (Valid_role(emp->Role) == 0);
+                        continue;
+                    case 4:
+                        do {
+                            printf("Enter new Status (ACTIVE, LEAVE, TERMINATED): ");
+                            scanf("%s", emp->Status);
+                            if (Valid_status(emp->Status) == 0){
+                                printf("Invalid Status. Please try again.\n");
+                            }
+                        } while (Valid_status(emp->Status) == 0);
+                        continue;
+                    case 5:
+                        do {
+                            printf("Enter new Hourly Rate: ");
+                            scanf("%f", &emp->Hourly_rate);
+                            if (emp->Hourly_rate < 0 || emp->Hourly_rate > 80){
+                                printf("Invalid Hourly Rate. Must be a positive integer between 0 and 80.\n");
+                            }
+                        } while (emp->Hourly_rate < 0 || emp->Hourly_rate > 80);
+                        continue;
+                    default:
+                        printf("Invalid choice. Please try again.\n");
+                }
+            } while(choice < 1 || choice > 5);
+        }
+
+        fprintf(temp, "%s,%s,%s,%s,%s,%.2f\n",
+            emp->Employee_ID,
+            emp->First_name,
+            emp->Last_name,
+            emp->Role,
+            emp->Status,
+            emp->Hourly_rate);
+    }
+    fclose(file);
+    fclose(temp);
+
+    if (found == 0) {
+        printf("Employee with ID '%s' not found.\n", ID_search);
+        remove(TEMP_file);
+        return;
+    }
+
+    remove(CSV_file);
+    rename(TEMP_file, CSV_file);
+    printf("Employee updated successfully.\n");
 }
+
+// Delete Record 
+void Delete_Record(struct employee *emp){
+    char line [200];
+    char ID_search [10];
+
+
+    FILE *file = fopen(CSV_file, "r");
+        if (file == NULL) {
+            printf("Error: Employee file not found.\n");
+            return;
+        }
+
+    FILE *temp = fopen(TEMP_file, "w");
+        if (temp == NULL) {
+            printf("Error: Could not create temp file.\n");
+            fclose(file);
+            return;
+        }
+    
+    printf("Enter the ID number of the record you wish to delete: ");
+    scanf("%s",ID_search);
+
+    while(fgets(line, sizeof(line), file) != NULL){
+        sscanf(line, "%[^,],%[^,],%[^,],%[^,],%[^,],%f",
+            emp->Employee_ID,
+            emp->First_name,
+            emp->Last_name,
+            emp->Role,
+            emp->Status,
+            &emp->Hourly_rate);
+
+        if (strcmp(emp->Employee_ID, ID_search) != 0){
+            fprintf(temp, "%s,%s,%s,%s,%s,%.2f\n",
+                emp->Employee_ID,
+                emp->First_name,
+                emp->Last_name,
+                emp->Role,
+                emp->Status,
+                emp->Hourly_rate);
+        }
+
+    } 
+    fclose(file);
+    fclose(temp);
+
+    remove(CSV_file);
+    rename(TEMP_file, CSV_file);
+    printf("Employee with ID '%s' deleted successfully.\n", ID_search);
+}
+
