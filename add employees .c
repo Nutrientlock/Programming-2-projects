@@ -267,7 +267,7 @@ void list_emplyees(struct employee *emp){
 
     // print table header
     printf("\n%-10s %-20s %-20s %-15s %-15s\n",
-        "ID", "Full Name", "Role", "Status", "Hourly Rate");
+        "ID", "Full Name", "Role", "Status", "Hours worked");
     printf("--------------------------------------------------------------------------------\n");
 
     while (fgets(line, sizeof(line), file) != NULL) {
@@ -329,7 +329,7 @@ void find_employee(struct employee *emp){
                 // combine first and last name
                 snprintf(Full_name, sizeof(Full_name), "%s %s", emp->First_name, emp->Last_name);
                
-                printf("\n%-10s %-20s %-20s %-15s %-15s\n", "ID", "Full Name", "Role", "Status", "Hourly Rate");
+                printf("\n%-10s %-20s %-20s %-15s %-15s\n", "ID", "Full Name", "Role", "Status", "Hours Worked");
                 printf("--------------------------------------------------------------\n");
                 printf("%-10s %-20s %-20s %-15s %-15.2f\n",
                     emp->Employee_ID,
@@ -394,7 +394,7 @@ void Update_Record(struct employee *emp){
 
             do {
                 printf("What would you like to update?\n");
-                printf("1. First Name\n2. Last Name\n3. Role\n4. Status\n5. Hourly Rate\n6. Stop updating\n");
+                printf("1. First Name\n2. Last Name\n3. Role\n4. Status\n5. Hours Worked\n6. Stop updating\n");
                 printf("Enter your choice: ");
                 scanf("%d", &choice);
 
@@ -430,7 +430,7 @@ void Update_Record(struct employee *emp){
                             printf("Enter new Hourly Rate: ");
                             scanf("%f", &emp->Hourly_rate);
                             if (emp->Hourly_rate < 0 || emp->Hourly_rate > 80){
-                                printf("Invalid Hourly Rate. Must be a positive integer between 0 and 80.\n");
+                                printf("Invalid Hours Worked. Must be a positive integer between 0 and 80.\n");
                             }
                         } while (emp->Hourly_rate < 0 || emp->Hourly_rate > 80);
                         continue;
