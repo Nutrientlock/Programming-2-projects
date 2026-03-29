@@ -3,12 +3,22 @@ import csv
 from datetime import datetime
 
 def save_payroll(emp_id, hours, rate, gross, nis, tax, net):
+    file_exists = False
+    try:
+        with open("payroll.csv", "r"):
+            file_exists = True
+    except FileNotFoundError:
+        pass
 
     with open("payroll.csv", "a", newline="") as file:
         writer = csv.writer(file)
 
+        # Write header if file is new
+        if not file_exists:
+            writer.writerow(["Date","EmployeeID","Hours","Rate","Gross","NIS","Tax","Net"])
+
         writer.writerow([
-            datetime.now().date(),  # today's date
+            datetime.now().date(),
             emp_id,
             hours,
             rate,
@@ -16,7 +26,8 @@ def save_payroll(emp_id, hours, rate, gross, nis, tax, net):
             nis,
             tax,
             net
-        ])  
+        ]) 
+
 
 def calculate_payroll():   
     if not dataforp2.employees:
@@ -35,8 +46,7 @@ def calculate_payroll():
             print("\t\t\t\t\t\tInvalid input. Skipping employee.")
             continue
 
-        rate = float(worker["HourlyRate"])
-
+        rate = 10
         gross = hours * rate
         nis = gross * 0.025
         edu_tax = (gross - nis) * 0.0225

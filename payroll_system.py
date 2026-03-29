@@ -14,7 +14,7 @@ def menu():
 
             choice = input("\t\t\t\t\t\tEnter your choice: ").strip().lower()
             if choice == "q":
-                print("\t\t\t\t\t\tGoodbye!\n")
+                print("\t\t\t\t\t\tExiting system...\n")
                 break
             elif choice == "1":
                 print("\t\t\t\t\t\tLoad Employees selected\n")
@@ -28,7 +28,7 @@ def menu():
                
             elif choice == "4":
                 print("\t\t\t\t\t\tView Payroll Summary Report selected\n")
-              
+                viewEmployee.payroll_summary()
             else:
-                print("\t\t\t\t\t\tInvalid choice\n")
+                print("\t\t\t\t\t\tInvalid choice! Try again...\n")
 menu()
