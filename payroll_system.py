@@ -1,18 +1,21 @@
 import load_employees
 import viewEmployee
 import payroll
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
 
 def menu():
     while True:
-            print("\n\t\t\t\t\t\t========= Payroll System =========")
-            print("\t\t\t\t\t\t= 1. Load Employees              =")
-            print("\t\t\t\t\t\t= 2. View Employee List          =")
-            print("\t\t\t\t\t\t= 3. Calculate Payroll           =")
-            print("\t\t\t\t\t\t= 4. View Payroll Summary Report =")
-            print("\t\t\t\t\t\t= q. Exit                        =")
-            print("\t\t\t\t\t\t==================================")
+            
+            print(Fore.BLACK + Back.YELLOW +"\n\t\t\t\t\t\t========= PAYROLL SYSTEM =========")
+            print(Fore.GREEN +"\t\t\t\t\t\t= 1. Load Employees              =")
+            print(Fore.GREEN +"\t\t\t\t\t\t= 2. View Employee List          =")
+            print(Fore.GREEN +"\t\t\t\t\t\t= 3. Calculate Payroll           =")
+            print(Fore.GREEN +"\t\t\t\t\t\t= 4. View Payroll Summary Report =")
+            print(Fore.GREEN +"\t\t\t\t\t\t= q. Exit                        =")
+            print(Fore.GREEN +"\t\t\t\t\t\t==================================")
 
-            choice = input("\t\t\t\t\t\tEnter your choice: ").strip().lower()
+            choice = input(Fore.RED +"\t\t\t\t\t\tEnter your choice: ").strip().lower()
             if choice == "q":
                 print("\t\t\t\t\t\tExiting system...\n")
                 break

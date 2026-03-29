@@ -54,12 +54,12 @@ def payroll_summary():
         overall_tax += total_tax
         overall_net += total_net
 
-        print(f"Employee: {worker['FullName']} (ID: {emp_id})")
-        print(f"\t\t\t\t\t\tTotal Gross Pay       : {total_gross:.2f}")
-        print(f"\t\t\t\t\t\tTotal NIS Deduction   : {total_nis:.2f}")
-        print(f"\t\t\t\t\t\tTotal Education Tax   : {total_tax:.2f}")
-        print(f"\t\t\t\t\t\tTotal Net Pay         : {total_net:.2f}\n")
-
+        print(f"\t\t\t\t\t\tEmployee: {worker['FullName']} (ID: {emp_id})")
+        print(f"\t\t\t\t\t\tTotal Gross Pay       : {total_gross:0.2f}")
+        print(f"\t\t\t\t\t\tTotal NIS Deduction   : {total_nis:0.2f}")
+        print(f"\t\t\t\t\t\tTotal Education Tax   : {total_tax:0.2f}")
+        print(f"\t\t\t\t\t\tTotal Net Pay         : {total_net:0.2f}\n")
+    print("\t\t\t\t\t\t---------------------------------------------")
     print(f"\t\t\t\t\t\tOverall Gross Pay       : {overall_gross:.2f}")
     print(f"\t\t\t\t\t\tOverall NIS Deduction   : {overall_nis:.2f}")
     print(f"\t\t\t\t\t\tOverall Education Tax   : {overall_tax:.2f}")
@@ -96,15 +96,22 @@ def view_employees():
         if emp_payslips:
             last = emp_payslips[-1]  # get the most recent payslip
             print(f"\n\t\t\t\t\t\t--- Last Payroll Record ---")
-            print(f"\t\t\t\t\t\t  Last Paid Date : {last["date"]}")
-            print(f"\t\t\t\t\t\t  Hours Worked   : {last['hours']}")
-            print(f"\t\t\t\t\t\t  Hourly Rate    : {last['rate']}")
-            print(f"\t\t\t\t\t\t  Gross Pay      : {last['gross']}")
-            print(f"\t\t\t\t\t\t  NIS            : {last['nis']}")
-            print(f"\t\t\t\t\t\t  Education Tax  : {last['tax']}")
-            print(f"\t\t\t\t\t\t  Net Pay        : {last['net']}\n")
+            print(f"\t\t\t\t\t\tLast Paid Date : {last["date"]}")
+            print(f"\t\t\t\t\t\tHours Worked   : {last['hours']}")
+            print(f"\t\t\t\t\t\tHourly Rate    : {last['rate']}")
+            print(f"\t\t\t\t\t\tGross Pay      : {last['gross']}")
+            print(f"\t\t\t\t\t\tNIS            : {last['nis']}")
+            print(f"\t\t\t\t\t\tEducation Tax  : {last['tax']}")
+            print(f"\t\t\t\t\t\tNet Pay        : {last['net']}\n")
             time.sleep(0.2)
         else:
-            print(f"\t\t\t\t\t\tNo payroll records yet.")
+            print(f"\n\t\t\t\t\t\t--- Last Payroll Record ---")
+            print("\t\t\t\t\t\tLast Paid Date : None")
+            print("\t\t\t\t\t\tHours Worked   : None")
+            print("\t\t\t\t\t\tHourly Rate    : None")
+            print("\t\t\t\t\t\tGross Pay      : None")
+            print("\t\t\t\t\t\tNIS            : None")
+            print("\t\t\t\t\t\tEducation Tax  : None")
+            print("\t\t\t\t\t\tNet Pay        : None")
 if __name__ == "__main__":
     view_employees()
