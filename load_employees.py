@@ -1,5 +1,7 @@
 import csv
 import dataforp2
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
 
 def load_employees():
     dataforp2.employees = []  
@@ -18,12 +20,10 @@ def load_employees():
                 }
                 dataforp2.employees.append(worker)
 
-        print(f"\t\t\t\t\t\t{len(dataforp2.employees)} Employees loaded successfully!")
+        print(Fore.GREEN+f"\t\t\t\t\t\t{len(dataforp2.employees)} Employees loaded successfully!")
 
     except FileNotFoundError:
-        print("\t\t\t\t\t\temployees not found!")
-    except ValueError as e:
-        print(f"\t\t\t\t\t\tError reading HourlyRate: {e}")
+        print(Fore.RED+"\t\t\t\t\t\temployees not found!")
 
 if __name__ == '__main__':
     load_employees()
