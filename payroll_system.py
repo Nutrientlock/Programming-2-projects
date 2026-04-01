@@ -6,14 +6,13 @@ init(autoreset=True)
 import os
 import time
 
-def clear_screen():
+def clear_screen():#rmr to check this
     if os.name == 'nt':
-        time.sleep(5) #go back to fix 
+        time.sleep() 
         os.system('cls')
 
 def menu():
     while True:
-            clear_screen()# dont forget to fix this
             print(Fore.CYAN + Style.BRIGHT +"\n\t\t\t\t\t\t========= PAYROLL SYSTEM =========")
             print(Fore.WHITE + "\t\t\t\t\t\t= 1. Load Employees              =")
             print(Fore.WHITE + "\t\t\t\t\t\t= 2. View Employee List          =")

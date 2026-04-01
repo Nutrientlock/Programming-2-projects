@@ -31,7 +31,7 @@ def load_payroll_history():
 def payroll_summary():
     payroll_history = load_payroll_history()
     if not payroll_history:
-        print("\t\t\t\t\t\tNo payroll records found!\n")
+        print(Fore.RED + Style.BRIGHT +"\t\t\t\t\t\tNo payroll records found!\n")
         return
 
     overall_gross = 0

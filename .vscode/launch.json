@@ -2,14 +2,26 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Run C Program",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${fileDirname}",
+      "environment": [],
+      "externalConsole": true,
+      "MIMode": "gdb"
+    },
+    {
       "name": "C/C++ Runner: Debug Session",
       "type": "cppdbg",
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "c:/Users/ajayc/Desktop/P2",
-      "program": "c:/Users/ajayc/Desktop/P2/build/Debug/outDebug",
+      "cwd": "c:/Users/lenovo/Documents/Programming 2 project/Programming2",
+      "program": "c:/Users/lenovo/Documents/Programming 2 project/Programming2/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
