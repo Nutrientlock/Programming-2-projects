@@ -3,23 +3,20 @@ import viewEmployee
 import payroll
 from colorama import Fore, Back, Style, init
 init(autoreset=True)
-import os
-import time
 
-def clear_screen():#rmr to check this
-    if os.name == 'nt':
-        time.sleep() 
-        os.system('cls')
+
+
 
 def menu():
     while True:
-            print(Fore.CYAN + Style.BRIGHT +"\n\t\t\t\t\t\t========= PAYROLL SYSTEM =========")
-            print(Fore.WHITE + "\t\t\t\t\t\t= 1. Load Employees              =")
-            print(Fore.WHITE + "\t\t\t\t\t\t= 2. View Employee List          =")
-            print(Fore.WHITE + "\t\t\t\t\t\t= 3. Calculate Payroll           =")
-            print(Fore.WHITE + "\t\t\t\t\t\t= 4. View Payroll Summary Report =")
-            print(Fore.WHITE + "\t\t\t\t\t\t= q. Exit                        =")
-            print(Fore.CYAN + Style.BRIGHT +"\t\t\t\t\t\t==================================")
+            print(Fore.CYAN + Style.BRIGHT +"\n\t\t\t\t\t\t============ PAYROLL SYSTEM =============")
+            print(Fore.WHITE + "\t\t\t\t\t\t= 1. Load Employees                    =")
+            print(Fore.WHITE + "\t\t\t\t\t\t= 2. View Employee List                =")
+            print(Fore.WHITE + "\t\t\t\t\t\t= 3. Calculate Payroll                 =")
+            print(Fore.WHITE + "\t\t\t\t\t\t= 4. View Payroll Summary Report       =")
+            print(Fore.WHITE + "\t\t\t\t\t\t= 5. View Top 3 Earners                =")
+            print(Fore.WHITE + "\t\t\t\t\t\t= q. Exit                              =")
+            print(Fore.CYAN + Style.BRIGHT +"\t\t\t\t\t\t========================================")
 
             choice = input(Fore.LIGHTCYAN_EX + Style.BRIGHT + "\t\t\t\t\t\tEnter your choice: ").strip().lower()
             if choice == "q":

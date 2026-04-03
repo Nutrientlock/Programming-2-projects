@@ -57,12 +57,11 @@ def calculate_payroll():
 
         save_payroll(worker["EmployeeID"], hours, rate, gross, nis, edu_tax, net)
 
-        # Display payroll results with color highlights
         print(Fore.CYAN + "\n\t\t\t\t\t\t--- Payroll Result ---")
         print(Fore.MAGENTA + f"\t\t\t\t\t\tName: {worker['FullName']}")
-        print(Fore.WHITE + f"\t\t\t\t\t\tGross Pay: {gross:.2f}")
-        print(Fore.YELLOW + f"\t\t\t\t\t\tNIS: {nis:.2f}")
-        print(Fore.YELLOW + f"\t\t\t\t\t\tEducation Tax: {edu_tax:.2f}")
-        print(Fore.GREEN + f"\t\t\t\t\t\tNet Pay: {net:.2f}\n")
+        print(Fore.WHITE + f"\t\t\t\t\t\tGross Pay: ${gross:.2f}")
+        print(Fore.YELLOW + f"\t\t\t\t\t\tNIS: ${nis:.2f}")
+        print(Fore.YELLOW + f"\t\t\t\t\t\tEducation Tax: ${edu_tax:.2f}")
+        print(Fore.GREEN + f"\t\t\t\t\t\tNet Pay: ${net:.2f}\n")
 if __name__ == '__main__':
     calculate_payroll()

@@ -7,8 +7,10 @@
 #include <string.h>
 #include <ctype.h>
 
-#define CSV_file "C:\\Users\\ajayc\\Desktop\\P2\\employee_records.csv"
-#define TEMP_file "C:\\Users\\ajayc\\Desktop\\P2\\temp.csv"
+#define CSV_file "employee_records.csv"
+#define TEMP_file "temp.csv"
+
+
 
 // struct to receive Employee data
 struct employee{
@@ -45,21 +47,54 @@ void Update_Record(struct employee *emp);
 void Delete_Record(struct employee *emp);
 
 
-int main(){
+int main() {
     struct employee *empPtr = &emp;
+    int choice;
+ 
+    do {
+        printf("\n===== EMPLOYEE MANAGEMENT MENU =====\n");
+        printf("1. Add Employee\n");
+        printf("2. List Employees\n");
+        printf("3. Find Employee\n");
+        printf("4. Update Employee\n");
+        printf("5. Delete Employee\n");
+        printf("6. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    
-    FILE *file = open_file();
-    if (file == NULL) return 1;
+        switch(choice) {
+            case 1:
+                Add_Employee(empPtr);
+                break;
 
-    list_emplyees(empPtr);
-    close_file(file);
-    find_employee(empPtr);
-    Update_Record(empPtr);
-    Delete_Record(empPtr);
+            case 2:
+                list_emplyees(empPtr);
+                break;
+
+            case 3:
+                find_employee(empPtr);
+                break;
+
+            case 4:
+                Update_Record(empPtr);
+                break;
+
+            case 5:
+                Delete_Record(empPtr);
+                break;
+
+            case 6:
+                printf("Exiting program...\n");
+                break;
+
+            default:
+                printf("Invalid choice. Try again.\n");
+        }
+
+    } while(choice != 6);
+
     return 0;
 }
-
 FILE *open_file(){
     FILE *file;
     file = fopen(CSV_file, "a");
@@ -152,14 +187,12 @@ int Valid_role(char *role){
         temp[i] = toupper(temp[i]);
         i++;
     }
-    if (strcmp(temp, "MANAGER") == 0)    return 1;
+    if (strcmp(temp, "MANAGER") == 0)    return 1; 
     if (strcmp(temp, "SERVER") == 0)  return 1;
     if (strcmp(temp, "COOK") == 0)    return 1;
     if (strcmp(temp, "CASHIER") == 0)         return 1;
-    if (strcmp(temp, "HUMAN RESOURCES") == 0)  return 1;
-    if (strcmp(temp, "ADMIN") == 0)      return 1;
-    if (strcmp(temp, "ENGINEER") == 0)   return 1;
-    if (strcmp(temp, "INTERN") == 0)     return 1;
+
+    
 
     return 0;
 }
@@ -197,7 +230,7 @@ void Add_Employee(struct employee *emp){
         scanf("%s", emp->Last_name);
 
         do{
-        printf("Enter Employee Role (MANAGER, SERVER, COOK, CASHIER, HUMAN RESOURCES, ADMIN, ENGINEER, INTERN):");
+        printf("Enter Employee Role (MANAGER, SERVER, COOK, CASHIER):");
         scanf("%s", emp->Role);
         if (Valid_role(emp->Role) == 0){
             printf("Invalid Role. Please try again.\n");
@@ -205,7 +238,7 @@ void Add_Employee(struct employee *emp){
         } while(Valid_role (emp->Role) == 0);
 
         do {
-            printf("Enter Employee, Status Active, on leave, or terminated: ");
+            printf("Enter Employee Status: Active, on leave, or terminated: ");
             scanf("%s", emp->Status);
             if (Valid_status(emp->Status) == 0){
             printf("\nError: Invalid Status. Must be Active, On Leave, or Terminated: \n");

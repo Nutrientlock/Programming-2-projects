@@ -3,6 +3,13 @@ import csv
 import time
 from colorama import Fore, Back, Style, init
 init(autoreset=True)
+import os
+import time
+
+def clear_screen():#rmr to check this
+    if os.name == 'nt':
+        time.sleep(5) 
+        os.system('cls')
 
 def load_payroll_history():
     payroll_history = {}
@@ -24,7 +31,7 @@ def load_payroll_history():
                 if emp_id not in payroll_history:
                     payroll_history[emp_id] = []
                 payroll_history[emp_id].append(payslip)
-    except FileNotFoundError:
+    except FileNotFoundError: 
         pass  # no payroll yet
     return payroll_history
 
@@ -114,6 +121,11 @@ def view_employees():
             print(Fore.RED + "\t\t\t\t\t\tNIS            : None")
             print(Fore.RED + "\t\t\t\t\t\tEducation Tax  : None")
             print(Fore.RED + "\t\t\t\t\t\tNet Pay        : None")
+
+
+def TopEmployee():
+    for worker in dataforp2.employees:
+        pass
 
 if __name__ == "__main__":
     view_employees()
