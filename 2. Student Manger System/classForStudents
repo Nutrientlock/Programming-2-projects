@@ -1,0 +1,60 @@
+import csv
+
+class Student:
+    def __init__(self,id,fristName,lastName):
+        self.id = id
+        self.fristName = fristName
+        self.lastName = lastName
+        self.grades = []
+
+    def addGrade(self,grade):
+        self.grades.append(grade)
+
+    def getAverage(self):
+        if not self.grades:
+            return 0
+        return sum(self.grades) / len(self.grades)
+
+    def display(self):
+        average = self.getAverage()
+        print(f'id: {self.id}\nName: {self.fristName} {self.lastName}\nAverage: {average:.2f}\n')
+
+s1 = Student("12","kar",'Bell')
+s1.addGrade(80)
+s1.addGrade(90.0)
+
+s2 = Student("13","kim",'Benny')
+s2.addGrade(84.5)
+s2.addGrade(96)
+
+class GradingSystem:
+    def __init__(self):
+        self.students = []
+
+    def addStudents(self, student):
+        self.students.append(student)
+    
+    def displayAll(self):
+        for student in self.students:
+            student.display()  
+
+    def saveToFile(self):
+        try:
+            with open ("StudentList.csv", "w") as f:
+                for student in self.students:
+                    line = (
+                        student.id + "," +
+                        student.fristName + ',' +
+                        student.lastName+ ','+
+                        str(student.grades)
+                    )
+                    f.write(line + '\n')
+        except FileNotFoundError:
+            print('File Not Found')
+
+            
+system = GradingSystem()
+system.addStudents(s1)
+system.addStudents(s2)
+system.displayAll()
+system.saveToFile()

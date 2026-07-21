@@ -1,0 +1,27 @@
+kar ={
+    'fa': ['ere','uew'],
+    'ten': [3, 4, 5]
+}
+
+for item in kar['fa']:
+    print(f'Yh we are starting to under loops: {item}')
+
+for item in kar['ten']:
+    print(f'f: {item}')
+
+total = 0
+
+for i in range(0,11):
+    new = i + 1
+    total = total + new
+print(total)
+
+piggybank = [200, 500, 400, 800, 900,300, 350]
+print('list\n')
+for item in piggybank:
+    print(item)
+
+     
+    
+
+    

@@ -1,0 +1,74 @@
+bank = {
+    "account_name": 'karisa',
+    'balance': 50000.0,
+    'transactions': []
+}
+
+def view(bank):
+    print("accont name", bank["account_name"])
+    print("balance", bank['balance'])
+    print('--------------------------')
+    print('\tTransactions')
+    print('--------------------------')
+    for items in bank['transactions']:
+       print(items)
+
+def deposit(bank):
+    print('\n==Deposit==\n')
+    try:
+        new_balance = float(input('Enter Deposit Amount: '))
+        if new_balance  <= 0:
+            print('\nMust be more than zero.\n')
+        else:
+            bank['balance'] += new_balance
+            print('\nTransaction Made!!\n')
+            bank['transactions'].append(f'deposit{new_balance}')
+    except ValueError:
+        print('You must enter a number!!\n')
+
+def withdraw(bank):
+    print('\n==Withdrawal==\n')
+    try:
+        new_balance = float(input('Enter withdraw Amount: '))
+        if new_balance > bank['balance']:
+            print('\nNot Enough Funds.')
+        elif new_balance <= 0:
+            print('Funnds cannot be negitive.\n')
+        elif new_balance <= bank['balance']:
+            bank['balance'] -= new_balance
+            bank['transactions'].append(f'Withdrew {new_balance}')
+            print('\nTranaction Made!!\n')
+        else:
+            print('\nInvaild\n')
+    except ValueError:
+        print('Not A Vaild Input!!!')
+
+
+
+def menu():
+    while True:
+        print('==this is menu==')
+        print('choose')
+        print('1. veiw')
+        print('2. deposit')
+        print('3. withdraw')
+        
+        print('q. exit')
+        choice = input('enter choice: ').strip().lower()
+        if choice == 'q':
+            print('bye')
+            break
+        elif choice == '1':
+            view(bank)
+        elif choice == '2':
+            deposit(bank)
+        elif choice == '3':
+            withdraw(bank)
+        else:
+            print('invaild')
+
+if __name__ == '__main__':
+    menu()
+
+
+
